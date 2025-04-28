@@ -14,4 +14,8 @@ return {
       vim.opt.undofile = false
     end,
   },
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
 }
