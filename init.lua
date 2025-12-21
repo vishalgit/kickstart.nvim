@@ -934,6 +934,8 @@ require('lazy').setup({
         return '%2l:%-2v'
       end
 
+      -- Simple and easy jumps to any part of the file
+      require('mini.jump').setup()
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
