@@ -8,6 +8,12 @@ return {
     config = function()
       vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode' })
       vim.keymap.set('v', 'jk', '<Esc>', { desc = 'Exit insert mode' })
+      vim.keymap.set(
+        { 'n', 'v', 'x', 'o' },
+        's',
+        ':lua MiniJump2d.start(MiniJump2d.builtin_opts.single_character) <CR>',
+        { desc = 'Enters into single character search mode' }
+      )
       -- Override options
       vim.g.have_nerd_font = true
       vim.opt.relativenumber = true
@@ -18,4 +24,5 @@ return {
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
+  require('mini.jump2d').setup(),
 }
