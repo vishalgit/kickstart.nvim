@@ -10,6 +10,7 @@ return {
       vim.keymap.set('v', 'jk', '<Esc>', { desc = 'Exit insert mode' })
       -- Override options
       vim.g.have_nerd_font = true
+      vim.g.linenumber = true
       vim.opt.relativenumber = true
       vim.opt.undofile = false
     end,
