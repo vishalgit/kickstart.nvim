@@ -9,6 +9,19 @@ return {
     require('orgmode').setup {
       org_agenda_files = '~/notes/**/*',
       org_default_notes_file = '~/notes/index.org',
+      org_capture_templates = {
+        t = {
+          description = 'Task',
+          template = '- TODO %?\nCREATED: %U',
+          target = '~/notes/gtd/inbox.org',
+          headline = 'Inbox',
+        },
+        j = {
+          description = 'Journal Today',
+          template = '* %^{Journal About}\n:CREATED: %U\n %?',
+          target = '~/notes/journal/%<%Y-%m-%d>.org',
+        },
+      },
     }
   end,
 }
