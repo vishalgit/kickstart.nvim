@@ -12,7 +12,7 @@ return {
       org_capture_templates = {
         t = {
           description = 'Task',
-          template = '- TODO %?\nCREATED: %U',
+          template = '- TODO %? %U',
           target = '~/notes/gtd/inbox.org',
           headline = 'Inbox',
         },
@@ -22,6 +22,7 @@ return {
           target = '~/notes/journal/%<%Y-%m-%d>.org',
         },
       },
+      win_split_mode = 'float',
     }
   end,
 }
