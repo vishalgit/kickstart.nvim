@@ -1,64 +1,64 @@
 return {
   {
-    "akinsho/toggleterm.nvim",
+    'akinsho/toggleterm.nvim',
     lazy = true,
-    cmd = { "ToggleTerm" },
+    cmd = { 'ToggleTerm' },
     keys = {
       {
-        "<leader>Tf",
+        '<leader>Tf',
         function()
           local count = vim.v.count1
-          require("toggleterm").toggle(count, 0, LazyVim.root.get(), "float")
+          require('toggleterm').toggle(count, 0, vim.fs.root(0, '.git'), 'float')
         end,
-        desc = "ToggleTerm (float root_dir)",
+        desc = 'ToggleTerm (float root_dir)',
       },
       {
-        "<leader>Th",
+        '<leader>Th',
         function()
           local count = vim.v.count1
-          require("toggleterm").toggle(count, 15, LazyVim.root.get(), "horizontal")
+          require('toggleterm').toggle(count, 15, vim.fs.root(0, '.git'), 'horizontal')
         end,
-        desc = "ToggleTerm (horizontal root_dir)",
+        desc = 'ToggleTerm (horizontal root_dir)',
       },
       {
-        "<leader>Tv",
+        '<leader>Tv',
         function()
           local count = vim.v.count1
-          require("toggleterm").toggle(count, vim.o.columns * 0.4, LazyVim.root.get(), "vertical")
+          require('toggleterm').toggle(count, vim.o.columns * 0.4, vim.fs.root(0, '.git'), 'vertical')
         end,
-        desc = "ToggleTerm (vertical root_dir)",
+        desc = 'ToggleTerm (vertical root_dir)',
       },
       {
-        "<leader>Tn",
-        "<cmd>ToggleTermSetName<cr>",
-        desc = "Set term name",
+        '<leader>Tn',
+        '<cmd>ToggleTermSetName<cr>',
+        desc = 'Set term name',
       },
       {
-        "<leader>Ts",
-        "<cmd>TermSelect<cr>",
-        desc = "Select term",
+        '<leader>Ts',
+        '<cmd>TermSelect<cr>',
+        desc = 'Select term',
       },
       {
-        "<leader>Tt",
+        '<leader>Tt',
         function()
-          require("toggleterm").toggle(1, 100, LazyVim.root.get(), "tab")
+          require('toggleterm').toggle(1, 100, vim.fs.root(0, '.git'), 'tab')
         end,
-        desc = "ToggleTerm (tab root_dir)",
+        desc = 'ToggleTerm (tab root_dir)',
       },
       {
-        "<leader>TT",
+        '<leader>TT',
         function()
-          require("toggleterm").toggle(1, 100, vim.loop.cwd(), "tab")
+          require('toggleterm').toggle(1, 100, vim.loop.cwd(), 'tab')
         end,
-        desc = "ToggleTerm (tab cwd_dir)",
+        desc = 'ToggleTerm (tab cwd_dir)',
       },
     },
     opts = {
       -- size can be a number or function which is passed the current terminal
       size = function(term)
-        if term.direction == "horizontal" then
+        if term.direction == 'horizontal' then
           return 15
-        elseif term.direction == "vertical" then
+        elseif term.direction == 'vertical' then
           return vim.o.columns * 0.4
         end
       end,
@@ -76,7 +76,7 @@ return {
       insert_mappings = true, -- whether or not the open mapping applies in insert mode
       terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
       persist_size = true,
-      direction = "horizontal" or "vertical" or "window" or "float",
+      direction = 'horizontal' or 'vertical' or 'window' or 'float',
       -- direction = "vertical",
       close_on_exit = true, -- close the terminal window when the process exits
       -- shell = vim.o.shell, -- change the default shell
