@@ -5,28 +5,32 @@ return {
     cmd = { 'ToggleTerm' },
     keys = {
       {
-        '<leader>Tf',
+        '<leader>T1',
         function()
-          local count = vim.v.count1
-          require('toggleterm').toggle(count, 0, vim.fs.root(0, '.git'), 'float')
-        end,
-        desc = 'ToggleTerm (float root_dir)',
-      },
-      {
-        '<leader>Th',
-        function()
-          local count = vim.v.count1
-          require('toggleterm').toggle(count, 15, vim.fs.root(0, '.git'), 'horizontal')
+          require('toggleterm').toggle(1, 15, vim.fs.root(0, '.git'), 'horizontal')
         end,
         desc = 'ToggleTerm (horizontal root_dir)',
       },
       {
-        '<leader>Tv',
+        '<leader>T2',
         function()
-          local count = vim.v.count1
-          require('toggleterm').toggle(count, vim.o.columns * 0.4, vim.fs.root(0, '.git'), 'vertical')
+          require('toggleterm').toggle(2, 15, vim.fs.root(0, '.git'), 'horizontal')
         end,
-        desc = 'ToggleTerm (vertical root_dir)',
+        desc = 'ToggleTerm (horizontal root_dir)',
+      },
+      {
+        '<leader>T3',
+        function()
+          require('toggleterm').toggle(3, 15, vim.fs.root(0, '.git'), 'horizontal')
+        end,
+        desc = 'ToggleTerm (horizontal root_dir)',
+      },
+      {
+        '<leader>T4',
+        function()
+          require('toggleterm').toggle(4, 15, vim.fs.root(0, '.git'), 'horizontal')
+        end,
+        desc = 'ToggleTerm (horizontal root_dir)',
       },
       {
         '<leader>Tn',
@@ -40,26 +44,17 @@ return {
       },
       {
         '<leader>Tt',
-        function()
-          require('toggleterm').toggle(1, 100, vim.fs.root(0, '.git'), 'tab')
-        end,
+        '<cmd>ToggleTermToggleAll<cr>',
         desc = 'ToggleTerm (tab root_dir)',
-      },
-      {
-        '<leader>TT',
-        function()
-          require('toggleterm').toggle(1, 100, vim.loop.cwd(), 'tab')
-        end,
-        desc = 'ToggleTerm (tab cwd_dir)',
       },
     },
     opts = {
       -- size can be a number or function which is passed the current terminal
       size = function(term)
         if term.direction == 'horizontal' then
-          return 15
+          return 12
         elseif term.direction == 'vertical' then
-          return vim.o.columns * 0.4
+          return vim.o.columns * 0.3
         end
       end,
       open_mapping = [[<c-\>]],
