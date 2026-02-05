@@ -13,6 +13,7 @@ return {
         org_agenda_files = '~/org/**/*',
         org_default_notes_file = '~/org/notes.org',
       }
+      require('telescope').load_extension 'orgmode'
       require('org-bullets').setup()
       vim.lsp.enable 'org'
     end,
