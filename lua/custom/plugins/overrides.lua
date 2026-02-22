@@ -5,7 +5,6 @@ return {
     priority = -1000,
     lazy = false,
     init = function()
-      vim.g.have_nerd_font = true
       vim.o.relativenumber = true
       vim.o.undofile = false
     end,
