@@ -7,6 +7,7 @@ return {
     init = function()
       vim.o.relativenumber = true
       vim.o.undofile = false
+      vim.o.guifont = 'JetBrainsMono Nerd Font:h20'
     end,
   },
   require 'kickstart.plugins.debug',
