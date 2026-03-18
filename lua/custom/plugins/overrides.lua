@@ -7,7 +7,22 @@ return {
     init = function()
       vim.o.relativenumber = true
       vim.o.undofile = false
-      vim.o.guifont = 'JetBrainsMono Nerd Font:h20'
+      vim.o.guifont = 'JetBrainsMono Nerd Font:h12'
+    end,
+    config = function()
+      local group = vim.api.nvim_create_augroup('TextFileTypeSettings', { clear = true })
+
+      vim.api.nvim_create_autocmd('FileType', {
+        group = group,
+        pattern = { 'text' },
+        callback = function()
+          local opt = vim.opt_local
+          opt.expandtab = true
+          opt.tabstop = 4
+          opt.shiftwidth = 4
+          opt.softtabstop = 4
+        end,
+      })
     end,
   },
   require 'kickstart.plugins.debug',
