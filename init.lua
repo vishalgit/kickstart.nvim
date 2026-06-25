@@ -585,6 +585,88 @@ do
 end
 
 -- ============================================================
+-- SECTION 8: AUTOCOMPLETE & SNIPPETS
+-- blink.cmp and luasnip setup
+-- ============================================================
+do
+  -- [[ Snippet Engine ]]
+
+  -- NOTE: You can also specify plugin using a version range for its git tag.
+  --  See `:help vim.version.range()` for more info
+  vim.pack.add { { src = gh 'L3MON4D3/LuaSnip', version = vim.version.range '2.*' } }
+  require('luasnip').setup {}
+
+  -- `friendly-snippets` contains a variety of premade snippets.
+  --    See the README about individual language/framework/plugin snippets:
+  --    https://github.com/rafamadriz/friendly-snippets
+  --
+  -- vim.pack.add { gh 'rafamadriz/friendly-snippets' }
+  -- require('luasnip.loaders.from_vscode').lazy_load()
+
+  -- [[ Autocomplete Engine ]]
+  vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
+  require('blink.cmp').setup {
+    keymap = {
+      -- 'default' (recommended) for mappings similar to built-in completions
+      --   <c-y> to accept ([y]es) the completion.
+      --    This will auto-import if your LSP supports it.
+      --    This will expand snippets if the LSP sent a snippet.
+      -- 'super-tab' for tab to accept
+      -- 'enter' for enter to accept
+      -- 'none' for no mappings
+      --
+      -- For an understanding of why the 'default' preset is recommended,
+      -- you will need to read `:help ins-completion`
+      --
+      -- No, but seriously. Please read `:help ins-completion`, it is really good!
+      --
+      -- All presets have the following mappings:
+      -- <tab>/<s-tab>: move to right/left of your snippet expansion
+      -- <c-space>: Open menu or open docs if already open
+      -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
+      -- <c-e>: Hide menu
+      -- <c-k>: Toggle signature help
+      --
+      -- See `:help blink-cmp-config-keymap` for defining your own keymap
+      preset = 'default',
+
+      -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
+      --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+    },
+
+    appearance = {
+      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+      -- Adjusts spacing to ensure icons are aligned
+      nerd_font_variant = 'mono',
+    },
+
+    completion = {
+      -- By default, you may press `<c-space>` to show the documentation.
+      -- Optionally, set `auto_show = true` to show the documentation after a delay.
+      documentation = { auto_show = false, auto_show_delay_ms = 500 },
+    },
+
+    sources = {
+      default = { 'lsp', 'path', 'snippets' },
+    },
+
+    snippets = { preset = 'luasnip' },
+
+    -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
+    -- which automatically downloads a prebuilt binary when enabled.
+    --
+    -- By default, we use the Lua implementation instead, but you may enable
+    -- the rust implementation via `'prefer_rust_with_warning'`
+    --
+    -- See `:help blink-cmp-config-fuzzy` for more information
+    fuzzy = { implementation = 'lua' },
+
+    -- Shows a signature help window while you type arguments for a function
+    signature = { enabled = true },
+  }
+end
+
+-- ============================================================
 -- SECTION 6: LSP
 -- LSP keymaps, server configuration, Mason tools installations
 -- ============================================================
@@ -690,6 +772,10 @@ do
   -- Enable the following language servers
   --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
   --  See `:help lsp-config` for information about keys and how to configure
+  vim.pack.add { "https://github.com/b0o/schemastore.nvim" }
+
+  local capabilites = vim.lsp.protocol.make_client_capabilities()
+  capabilites = require('blink.cmp').get_lsp_capabilities(capabilities)
   ---@type table<string, vim.lsp.Config>
   local servers = {
     -- clangd = {},
@@ -738,6 +824,43 @@ do
         },
       },
     },
+    ts_ls = {
+      capabilities = capabilities
+    },
+    html = {
+      capabilities = capabilities,
+      filetypes = { 'html', 'htmldjango', 'handlebars'},
+    },
+    cssls = {
+      capabilities =  capabilities,
+      settings = {
+        css = { validate = true },
+        scss = { validate = true },
+        less = { validate = true },
+      },
+    },
+    emmet_ls = {
+      capabilities = capabilities,
+      filetypes = {'html', 'css', 'scss', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact'},
+    },
+    eslint = {
+      capabilities = capabilities,
+      on_attach = function(_, bufnr)
+        vim.api.nvim_create_autocmd('BufWritePre', {
+          buffer = bufnr,
+          command = 'EslintFixAll',
+        })
+      end,
+    },
+    jsonls = {
+      capabilities = capabilities,
+      settings = {
+        json = {
+          schemas = require('schemastore').json.schemas(),
+          validate = { enable = true },
+        },
+      },
+    },
   }
 
   vim.pack.add {
@@ -760,6 +883,15 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    "typescript-language-server",
+    "html-lsp",
+    "css-lsp",
+    "emmet-language-server",
+    "eslint-lsp",
+    "json-lsp",
+    "prettierd",
+    "eslint_d",
+    "stylelint",
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -802,92 +934,20 @@ do
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      javascript = { 'prettierd' },
+      javascriptreact = { 'prettierd' },
+      typescript = { 'prettierd' },
+      typescriptreact = { 'prettierd' },
+      html = { 'prettierd' },
+      css = { 'prettierd' },
+      scss = { 'prettierd' },
+      json = { 'prettierd' },
+      jsonc = { 'prettierd' },
+      markdown = { 'prettierd' },
     },
   }
 
   vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end, { desc = '[F]ormat buffer' })
-end
-
--- ============================================================
--- SECTION 8: AUTOCOMPLETE & SNIPPETS
--- blink.cmp and luasnip setup
--- ============================================================
-do
-  -- [[ Snippet Engine ]]
-
-  -- NOTE: You can also specify plugin using a version range for its git tag.
-  --  See `:help vim.version.range()` for more info
-  vim.pack.add { { src = gh 'L3MON4D3/LuaSnip', version = vim.version.range '2.*' } }
-  require('luasnip').setup {}
-
-  -- `friendly-snippets` contains a variety of premade snippets.
-  --    See the README about individual language/framework/plugin snippets:
-  --    https://github.com/rafamadriz/friendly-snippets
-  --
-  -- vim.pack.add { gh 'rafamadriz/friendly-snippets' }
-  -- require('luasnip.loaders.from_vscode').lazy_load()
-
-  -- [[ Autocomplete Engine ]]
-  vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
-  require('blink.cmp').setup {
-    keymap = {
-      -- 'default' (recommended) for mappings similar to built-in completions
-      --   <c-y> to accept ([y]es) the completion.
-      --    This will auto-import if your LSP supports it.
-      --    This will expand snippets if the LSP sent a snippet.
-      -- 'super-tab' for tab to accept
-      -- 'enter' for enter to accept
-      -- 'none' for no mappings
-      --
-      -- For an understanding of why the 'default' preset is recommended,
-      -- you will need to read `:help ins-completion`
-      --
-      -- No, but seriously. Please read `:help ins-completion`, it is really good!
-      --
-      -- All presets have the following mappings:
-      -- <tab>/<s-tab>: move to right/left of your snippet expansion
-      -- <c-space>: Open menu or open docs if already open
-      -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
-      -- <c-e>: Hide menu
-      -- <c-k>: Toggle signature help
-      --
-      -- See `:help blink-cmp-config-keymap` for defining your own keymap
-      preset = 'default',
-
-      -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-      --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
-    },
-
-    appearance = {
-      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-      -- Adjusts spacing to ensure icons are aligned
-      nerd_font_variant = 'mono',
-    },
-
-    completion = {
-      -- By default, you may press `<c-space>` to show the documentation.
-      -- Optionally, set `auto_show = true` to show the documentation after a delay.
-      documentation = { auto_show = false, auto_show_delay_ms = 500 },
-    },
-
-    sources = {
-      default = { 'lsp', 'path', 'snippets' },
-    },
-
-    snippets = { preset = 'luasnip' },
-
-    -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
-    -- which automatically downloads a prebuilt binary when enabled.
-    --
-    -- By default, we use the Lua implementation instead, but you may enable
-    -- the rust implementation via `'prefer_rust_with_warning'`
-    --
-    -- See `:help blink-cmp-config-fuzzy` for more information
-    fuzzy = { implementation = 'lua' },
-
-    -- Shows a signature help window while you type arguments for a function
-    signature = { enabled = true },
-  }
 end
 
 -- ============================================================
@@ -904,7 +964,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc','javascript', 'typescript', 'tsx', 'css', 'scss', 'json', 'jsdoc', 'graphql', }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
@@ -950,6 +1010,15 @@ do
       end
     end,
   })
+  vim.treesitter.language.register('json', 'jsonc')
+  vim.filetype.add {
+    extension = { jsonc = 'jsonc'},
+    filename = {
+      ['tsconfig.json'] = 'jsonc',
+      ['.eslintrc.json'] = 'jsonc',
+      ['tsconfig.base.json'] = 'jsonc',
+    },
+  }
 end
 
 -- ============================================================
@@ -966,6 +1035,15 @@ do
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
+  vim.pack.add {'https://github.com/windwp/nvim-ts-autotag'}
+  require('nvim-ts-autotag').setup()
+  vim.pack.add { gh 'NvChad/nvim-colorizer.lua'}
+  require('colorizer').setup {
+    filetypes = {'css', 'scss', 'html', 'javascript', 'typescript'},
+    user_default_options = { css = true, tailwind = true },
+  }
+  vim.pack.add { gh 'vuki656/package-info.nvim'}
+  require('package-info').setup()
    require 'kickstart.plugins.debug'
   -- require 'kickstart.plugins.indent_line'
    require 'kickstart.plugins.lint'
