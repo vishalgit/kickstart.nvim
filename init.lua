@@ -846,10 +846,18 @@ do
     eslint = {
       capabilities = capabilities,
       on_attach = function(_, bufnr)
-        vim.api.nvim_create_autocmd('BufWritePre', {
-          buffer = bufnr,
-          command = 'EslintFixAll',
-        })
+        -- Manually create the EslintFixAll command when the LSP attaches
+    vim.api.nvim_buf_create_user_command(bufnr, "EslintFixAll", function()
+      vim.lsp.buf_request(bufnr, 'workspace/executeCommand',{
+        command = "eslint.applyAllFixes",
+        arguments = {
+          {
+            uri = vim.uri_from_bufnr(bufnr),
+            version = vim.lsp.util.buf_versions[bufnr],
+          },
+        },
+      })
+    end, { desc = "Fix all ESLint problems in the current buffer" })
       end,
     },
     jsonls = {
