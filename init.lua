@@ -774,7 +774,7 @@ do
   --  See `:help lsp-config` for information about keys and how to configure
   vim.pack.add { "https://github.com/b0o/schemastore.nvim" }
 
-  local capabilites = vim.lsp.protocol.make_client_capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilites = require('blink.cmp').get_lsp_capabilities(capabilities)
   ---@type table<string, vim.lsp.Config>
   local servers = {
