@@ -879,7 +879,12 @@ do
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim
-  require('mason').setup {}
+  require('mason').setup {
+    registries = {
+      'github:mason-org/mason-registry',
+      'github:Crashdummyy/mason-registry',
+    },
+  }
 
   -- Ensure the servers and tools above are installed
   --
@@ -901,6 +906,8 @@ do
     "eslint_d",
     "stylelint",
     "markdownlint",
+    "roslyn-language-server",
+    "csharpier",
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -953,6 +960,15 @@ do
       json = { 'prettierd' },
       jsonc = { 'prettierd' },
       markdown = { 'prettierd' },
+      rust = { 'rustfmt' },
+      cs = { 'csharpier' },
+    },
+    formatters = {
+      csharpier = {
+        command = 'dotnet',
+        args = {'csharpier', '--write-stdout', '$FILENAME' },
+        stdin = true,
+      },
     },
   }
 
