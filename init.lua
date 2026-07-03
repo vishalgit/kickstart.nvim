@@ -647,7 +647,10 @@ do
     },
 
     sources = {
-      default = { 'lsp', 'path', 'snippets' },
+      default = { 'lsp', 'path', 'snippets', 'buffer', 'crates' },
+      providers = {
+        crates = { name = 'crates', module = 'crates.completion.blink' },
+      },
     },
 
     snippets = { preset = 'luasnip' },
