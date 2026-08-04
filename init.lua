@@ -587,7 +587,7 @@ do
   )
 
   -- Shortcut for searching your Neovim configuration files
-  vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true } end, { desc = '[S]earch [N]eovim files' })
+  vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true, hidden = true } end, { desc = '[S]earch [N]eovim files' })
 end
 
 -- ============================================================
@@ -650,10 +650,20 @@ do
       -- By default, you may press `<c-space>` to show the documentation.
       -- Optionally, set `auto_show = true` to show the documentation after a delay.
       documentation = { auto_show = false, auto_show_delay_ms = 500 },
+      trigger = { prefetch_on_insert = false },
     },
 
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
+      providers = {
+        minuet = {
+          name = 'minuet',
+          module = 'minuet.blink',
+          async = true,
+          timeout_ms = 3000,
+          score_offset = 50,
+        },
+      },
     },
 
     snippets = { preset = 'luasnip' },
@@ -966,7 +976,7 @@ do
       json = { 'prettierd' },
       jsonc = { 'prettierd' },
       markdown = { 'prettierd' },
-      rust = { 'rustfmt' },
+      rust = { 'rustfmt', 'leptosfmt' },
       cs = { 'csharpier' },
     },
     formatters = {
@@ -974,6 +984,14 @@ do
         command = 'dotnet',
         args = {'csharpier', '--write-stdout', '$FILENAME' },
         stdin = true,
+      },
+      leptosfmt = {
+        command = 'leptosfmt',
+        args = { '--stdin', '-'},
+        stdin = true,
+        condition = function(_, _)
+          return vim.fn.executable('leptosfmt') == 1
+        end,
       },
     },
   }
