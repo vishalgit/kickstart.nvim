@@ -234,12 +234,12 @@ do
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-  vim.keymap.set("n","|","<cmd>vsplit<CR>", { desc = "Vertical split"} )
-  vim.keymap.set("n","_","<cmd>split<CR>", { desc = "Horizontal split"} )
-  vim.keymap.set("n", "<M-h>", "3<C-w><", { desc = "Shrink window width"})
-  vim.keymap.set("n", "<M-l>", "3<C-w>>", { desc = "Grow window width"})
-  vim.keymap.set("n", "<M-j>", "3<C-w>-", { desc = "Shrink window height"})
-  vim.keymap.set("n", "<M-k>", "3<C-w>+", { desc = "Increase window height"})
+  vim.keymap.set('n', '|', '<cmd>vsplit<CR>', { desc = 'Vertical split' })
+  vim.keymap.set('n', '_', '<cmd>split<CR>', { desc = 'Horizontal split' })
+  vim.keymap.set('n', '<M-h>', '3<C-w><', { desc = 'Shrink window width' })
+  vim.keymap.set('n', '<M-l>', '3<C-w>>', { desc = 'Grow window width' })
+  vim.keymap.set('n', '<M-j>', '3<C-w>-', { desc = 'Shrink window height' })
+  vim.keymap.set('n', '<M-k>', '3<C-w>+', { desc = 'Increase window height' })
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
   -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -519,7 +519,16 @@ do
   local builtin = require 'telescope.builtin'
   vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
   vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-  vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+  vim.keymap.set(
+    'n',
+    '<leader>sf',
+    function()
+      builtin.find_files {
+        find_command = { 'rg', '--files', '--hidden', '--glob', '!.git/*', '--glob', '!**/node_modules/**' },
+      }
+    end,
+    { desc = '[S]earch [F]iles' }
+  )
   vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
   vim.keymap.set({ 'n', 'v' }, '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
   vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -587,7 +596,12 @@ do
   )
 
   -- Shortcut for searching your Neovim configuration files
-  vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true, hidden = true } end, { desc = '[S]earch [N]eovim files' })
+  vim.keymap.set(
+    'n',
+    '<leader>sn',
+    function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true, hidden = true } end,
+    { desc = '[S]earch [N]eovim files' }
+  )
 end
 
 -- ============================================================
@@ -606,9 +620,9 @@ do
   --    See the README about individual language/framework/plugin snippets:
   --    https://github.com/rafamadriz/friendly-snippets
   --
-   vim.pack.add { gh 'rafamadriz/friendly-snippets' }
-   require('luasnip.loaders.from_vscode').lazy_load {
-    paths = '~/.config/kickstart/lua/snippets'
+  vim.pack.add { gh 'rafamadriz/friendly-snippets' }
+  require('luasnip.loaders.from_vscode').lazy_load {
+    paths = { vim.fn.stdpath 'config' .. '/snippets' },
   }
 
   -- [[ Autocomplete Engine ]]
@@ -656,16 +670,7 @@ do
     },
 
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
-      providers = {
-        minuet = {
-          name = 'minuet',
-          module = 'minuet.blink',
-          async = true,
-          timeout_ms = 3000,
-          score_offset = 50,
-        },
-      },
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
 
     snippets = { preset = 'luasnip' },
@@ -790,7 +795,7 @@ do
   -- Enable the following language servers
   --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
   --  See `:help lsp-config` for information about keys and how to configure
-  vim.pack.add { "https://github.com/b0o/schemastore.nvim" }
+  vim.pack.add { 'https://github.com/b0o/schemastore.nvim' }
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilites = require('blink.cmp').get_lsp_capabilities(capabilities)
@@ -843,14 +848,14 @@ do
       },
     },
     ts_ls = {
-      capabilities = capabilities
+      capabilities = capabilities,
     },
     html = {
       capabilities = capabilities,
-      filetypes = { 'html', 'htmldjango', 'handlebars'},
+      filetypes = { 'html', 'htmldjango', 'handlebars' },
     },
     cssls = {
-      capabilities =  capabilities,
+      capabilities = capabilities,
       settings = {
         css = { validate = true },
         scss = { validate = true },
@@ -859,23 +864,28 @@ do
     },
     emmet_ls = {
       capabilities = capabilities,
-      filetypes = {'html', 'css', 'scss', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact'},
+      filetypes = { 'html', 'css', 'scss', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
     },
     eslint = {
       capabilities = capabilities,
       on_attach = function(_, bufnr)
         -- Manually create the EslintFixAll command when the LSP attaches
-    vim.api.nvim_buf_create_user_command(bufnr, "EslintFixAll", function()
-      vim.lsp.buf_request(bufnr, 'workspace/executeCommand',{
-        command = "eslint.applyAllFixes",
-        arguments = {
-          {
-            uri = vim.uri_from_bufnr(bufnr),
-            version = vim.lsp.util.buf_versions[bufnr],
-          },
-        },
-      })
-    end, { desc = "Fix all ESLint problems in the current buffer" })
+        vim.api.nvim_buf_create_user_command(
+          bufnr,
+          'EslintFixAll',
+          function()
+            vim.lsp.buf_request(bufnr, 'workspace/executeCommand', {
+              command = 'eslint.applyAllFixes',
+              arguments = {
+                {
+                  uri = vim.uri_from_bufnr(bufnr),
+                  version = vim.lsp.util.buf_versions[bufnr],
+                },
+              },
+            })
+          end,
+          { desc = 'Fix all ESLint problems in the current buffer' }
+        )
       end,
     },
     jsonls = {
@@ -914,18 +924,18 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
-    "typescript-language-server",
-    "html-lsp",
-    "css-lsp",
-    "emmet-language-server",
-    "eslint-lsp",
-    "json-lsp",
-    "prettierd",
-    "eslint_d",
-    "stylelint",
-    "markdownlint",
-    "roslyn-language-server",
-    "csharpier",
+    'typescript-language-server',
+    'html-lsp',
+    'css-lsp',
+    'emmet-language-server',
+    'eslint-lsp',
+    'json-lsp',
+    'prettierd',
+    'eslint_d',
+    'stylelint',
+    'markdownlint',
+    'roslyn-language-server',
+    'csharpier',
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -984,16 +994,14 @@ do
     formatters = {
       csharpier = {
         command = 'dotnet',
-        args = {'csharpier', '--write-stdout', '$FILENAME' },
+        args = { 'csharpier', '--write-stdout', '$FILENAME' },
         stdin = true,
       },
       leptosfmt = {
         command = 'leptosfmt',
-        args = { '--stdin', '-'},
+        args = { '--stdin', '-' },
         stdin = true,
-        condition = function(_, _)
-          return vim.fn.executable('leptosfmt') == 1
-        end,
+        condition = function(_, _) return vim.fn.executable 'leptosfmt' == 1 end,
       },
     },
   }
@@ -1015,7 +1023,27 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc','javascript', 'typescript', 'tsx', 'css', 'scss', 'json', 'jsdoc', 'graphql', }
+  local parsers = {
+    'bash',
+    'c',
+    'diff',
+    'html',
+    'lua',
+    'luadoc',
+    'markdown',
+    'markdown_inline',
+    'query',
+    'vim',
+    'vimdoc',
+    'javascript',
+    'typescript',
+    'tsx',
+    'css',
+    'scss',
+    'json',
+    'jsdoc',
+    'graphql',
+  }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
@@ -1063,7 +1091,7 @@ do
   })
   vim.treesitter.language.register('json', 'jsonc')
   vim.filetype.add {
-    extension = { jsonc = 'jsonc'},
+    extension = { jsonc = 'jsonc' },
     filename = {
       ['tsconfig.json'] = 'jsonc',
       ['.eslintrc.json'] = 'jsonc',
@@ -1086,26 +1114,26 @@ do
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  vim.pack.add {'https://github.com/windwp/nvim-ts-autotag'}
+  vim.pack.add { 'https://github.com/windwp/nvim-ts-autotag' }
   require('nvim-ts-autotag').setup()
-  vim.pack.add { gh 'NvChad/nvim-colorizer.lua'}
+  vim.pack.add { gh 'NvChad/nvim-colorizer.lua' }
   require('colorizer').setup {
-    filetypes = {'css', 'scss', 'html', 'javascript', 'typescript'},
+    filetypes = { 'css', 'scss', 'html', 'javascript', 'typescript' },
     user_default_options = { css = true, tailwind = true },
   }
-  vim.pack.add { gh 'vuki656/package-info.nvim'}
+  vim.pack.add { gh 'vuki656/package-info.nvim' }
   require('package-info').setup()
-   require 'kickstart.plugins.debug'
+  require 'kickstart.plugins.debug'
   -- require 'kickstart.plugins.indent_line'
-   require 'kickstart.plugins.lint'
-   require 'kickstart.plugins.autopairs'
+  require 'kickstart.plugins.lint'
+  require 'kickstart.plugins.autopairs'
   -- require 'kickstart.plugins.neo-tree'
-   require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
+  require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-   require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`

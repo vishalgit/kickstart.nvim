@@ -1,3 +1,4 @@
+if true then return end
 vim.pack.add {"https://github.com/milanglacier/minuet-ai.nvim"}
 
 require('minuet').setup {
