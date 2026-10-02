@@ -670,9 +670,16 @@ do
     },
 
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
       per_filetype = { org = { inherit_defaults = true, "org"}},
-      providers = { org = { name = "Org", module = "org.completion.blink"}},
+      providers = { 
+        org = { name = "Org", module = "org.completion.blink"},
+        minuet = {
+          name = 'minuet',
+          module = 'minuet.blink',
+          score_offset = 8,
+        },
+      },
     },
 
     snippets = { preset = 'luasnip' },
