@@ -232,10 +232,10 @@ do
 
 vim.keymap.set('n', '|', '<cmd>vsplit<CR>', { desc = 'Vertical split' })
 vim.keymap.set('n', '_', '<cmd>split<CR>', { desc = 'Horizontal split' })
-vim.keymap.set('n', '<M-h>', '3<C-w><', { desc = 'Shrink window width' })
-vim.keymap.set('n', '<M-l>', '3<C-w>>', { desc = 'Grow window width' })
-vim.keymap.set('n', '<M-j>', '3<C-w>-', { desc = 'Shrink window height' })
-vim.keymap.set('n', '<M-k>', '3<C-w>+', { desc = 'Increase window height' })
+vim.keymap.set('n', '<M-H>', '3<C-w><', { desc = 'Shrink window width' })
+vim.keymap.set('n', '<M-L>', '3<C-w>>', { desc = 'Grow window width' })
+vim.keymap.set('n', '<M-J>', '3<C-w>-', { desc = 'Shrink window height' })
+vim.keymap.set('n', '<M-K>', '3<C-w>+', { desc = 'Increase window height' })
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
