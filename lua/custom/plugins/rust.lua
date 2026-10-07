@@ -8,7 +8,11 @@ vim.g.rustaceanvim = {
     default_settings = {
       ['rust-analyzer'] = {
         check = { command = 'clippy' },
-        cargo = { allFeatures = true },
+        cargo = {
+          allFeatures = true,
+          targetDir = true,
+        },
+        procMacro = { ignored = { leptos_macro = { 'server' } } },
       },
     },
   },
