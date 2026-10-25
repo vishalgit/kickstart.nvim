@@ -157,7 +157,13 @@ do
   --   and `:help lua-guide-options`
   vim.o.list = true
   vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
+  -- Global statusline so horizontal splits draw a `horiz` separator line
+  vim.o.laststatus = 3
+  vim.opt.fillchars = {
+    vert = '│',
+    horiz = '─',
+    verthoriz = '┼',
+  }
   -- Preview substitutions live, as you type!
   vim.o.inccommand = 'split'
 
@@ -396,6 +402,9 @@ do
   -- Like many other themes, this one has different styles, and you could load
   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
   vim.cmd.colorscheme 'tokyonight-night'
+
+  -- Make vertical split lines visible
+  vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#7aa2f7', bg = 'NONE' })
 
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
