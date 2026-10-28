@@ -6,4 +6,9 @@ require('org').setup {
   agenda = {
     window = 'float',
   },
+  extensions = {
+    roam = { directory = '~/org/roam' },
+    quickadd = true,
+    journal = { directory = '~/org/journal' },
+  },
 }
