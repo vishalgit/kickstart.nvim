@@ -34,6 +34,10 @@ vim.api.nvim_create_autocmd('BufWritePost', {
           vim.schedule(function()
             vim.notify('orgsync failed (exit ' .. code .. ')' .. (msg ~= '' and (': ' .. msg) or ''), vim.log.levels.WARN)
           end)
+        else
+          vim.schedule(function()
+            vim.notify('orgsync: synced ~/org to mega:org', vim.log.levels.INFO)
+          end)
         end
       end,
     })
