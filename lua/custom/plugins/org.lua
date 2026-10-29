@@ -23,7 +23,8 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     end
 
     local stderr = {}
-    local ok, job = pcall(vim.fn.jobstart, { 'rclone', 'sync', vim.fn.expand '~/org', 'mega:org' }, {
+    local ok, job = pcall(vim.fn.jobstart, { 'rclone', 'bisync', '--ask-password=false', vim.fn.expand '~/org', 'mega:org', '--resync', '--size-only' }, {
+      stdin = 'null',
       stderr_buffered = true,
       on_stderr = function(_, data)
         stderr = data
