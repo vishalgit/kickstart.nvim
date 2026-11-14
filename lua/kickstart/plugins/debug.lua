@@ -10,7 +10,7 @@ vim.pack.add {
   'https://github.com/mfussenegger/nvim-dap',
   'https://github.com/rcarriga/nvim-dap-ui',
   'https://github.com/nvim-neotest/nvim-nio',
-  'https://github.com/mason-org/mason.nvim',
+  -- mason.nvim is already added (and set up) in init.lua
   'https://github.com/jay-babu/mason-nvim-dap.nvim',
   'https://github.com/NicholasMata/nvim-dap-cs',
 }

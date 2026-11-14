@@ -3,7 +3,7 @@
 
 vim.pack.add {
   { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range '*' },
-  'https://github.com/nvim-lua/plenary.nvim',
+  -- plenary.nvim is already added in init.lua (telescope dependency)
   'https://github.com/MunifTanjim/nui.nvim',
 }
 
