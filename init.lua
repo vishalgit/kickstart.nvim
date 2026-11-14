@@ -816,7 +816,7 @@ do
   vim.pack.add { 'https://github.com/b0o/schemastore.nvim' }
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilites = require('blink.cmp').get_lsp_capabilities(capabilities)
+  capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
   ---@type table<string, vim.lsp.Config>
   local servers = {
     -- clangd = {},
