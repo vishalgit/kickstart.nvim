@@ -883,7 +883,7 @@ do
     },
     emmet_ls = {
       capabilities = capabilities,
-      filetypes = { 'html', 'css', 'scss', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+      filetypes = { 'html', 'css', 'scss', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'rust' },
     },
     eslint = {
       capabilities = capabilities,
